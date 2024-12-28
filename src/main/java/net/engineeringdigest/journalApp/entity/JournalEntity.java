@@ -1,11 +1,18 @@
 package net.engineeringdigest.journalApp.entity;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
+
+@Data
+@NoArgsConstructor
 @Document(collection = "journal_Entries") //it is mainly used to map it with the MongoDB and it is Based on NoSQL
 public class JournalEntity {
 	//entity basically means the variables that has been used by the concept of encapsulation.
@@ -18,42 +25,5 @@ public class JournalEntity {
 	}
 	private LocalDateTime date;
 	private String title;
-	
-	public String getTitle() {
-		return title;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
-	public LocalDateTime getDate() {
-		return date;
-	}
-	
-	public void setDate(LocalDateTime date) {
-		this.date = date;
-	}
-	
-	public void setId(ObjectId id) {
-		this.id = id;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public String getContent() {
-		return content;
-	}
-	
-	public void setContent(String content) {
-		this.content = content;
-	}
-	
 	private String content;
 }
