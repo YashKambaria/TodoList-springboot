@@ -30,7 +30,6 @@ public class JournalEntryService {
 			journalEntity.setDate(LocalDateTime.now());
 			JournalEntity saved = journalEntryRepositary.save(journalEntity);
 			user.getJournalEntries().add(saved);
-			user.setUserName(null);
 			userService.saveEntry(user);
 		}
 		catch (Exception e){
@@ -47,10 +46,24 @@ public class JournalEntryService {
 	public Optional<JournalEntity> getById(ObjectId id){
 		return journalEntryRepositary.findById(id);
 	}
-	public void delete(ObjectId id, String userName){
-		User user = userService.findByUserName(userName);
-		user.getJournalEntries().removeIf(x->x.getId().equals(id));
-		userService.saveEntry(user);
-		journalEntryRepositary.deleteById(id);
+	@Transactional
+	public boolean delete(ObjectId id, String userName){
+		boolean b=false;
+		try {
+			User user = userService.findByUserName(userName);
+			b = user.getJournalEntries().removeIf(x -> x.getId().equals(id));
+			if (b) {
+				userService.saveEntry(user);
+				journalEntryRepositary.deleteById(id);
+			}
+		}
+		catch (Exception e){
+			System.out.println(e);
+			throw new RuntimeException("an error occur while deleting the file");
+		}
+		return b;
+	}
+	public List<JournalEntity> findByUserName(String userName){
+		return userService.findByUserName(userName).getJournalEntries();
 	}
 }

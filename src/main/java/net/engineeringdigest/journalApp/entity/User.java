@@ -1,9 +1,7 @@
 package net.engineeringdigest.journalApp.entity;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import net.engineeringdigest.journalApp.service.JournalEntryService;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -25,4 +23,5 @@ public class User {
 	private String password;
 	@DBRef
 	private List<JournalEntity> journalEntries=new ArrayList<>();
+	private List<String> roles;
 }
