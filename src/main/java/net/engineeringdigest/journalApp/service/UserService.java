@@ -50,4 +50,10 @@ public class UserService {
 	public User findByUserName(String userName){
 		return userRepositary.findByUserName(userName);
 	}
+	
+	public void saveAdmin(User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setRoles(Arrays.asList("User","ADMIN"));
+		userRepositary.save(user);
+	}
 }
