@@ -13,9 +13,12 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Journal App</name>
 	<description>E2EE Journal App</description>
+
 	<properties>
 		<java.version>1.8</java.version>
+		<sonar.login>squ_82ecbc89c56b07466323cd377d799cedc8f4f4fc</sonar.login>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -42,7 +45,14 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
+
 	</dependencies>
+
 
 	<build>
 		<plugins>
@@ -50,7 +60,13 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.9.0.2155</version>
+			</plugin>
 		</plugins>
 	</build>
+
 
 </project>
