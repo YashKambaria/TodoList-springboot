@@ -31,11 +31,20 @@ public class UserController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userName = authentication.getName();
 		User userInDB=userService.findByUserName(userName);
-				userInDB.setUserName(user.getUserName());
-				userInDB.setPassword(user.getPassword());
-				userService.saveNewUser(userInDB);
+		if(user.getUserName()!=null && !user.getUserName().isEmpty()){
+			userInDB.setUserName(user.getUserName());
+		}
+		if(user.getPassword()!=null && !user.getPassword().isEmpty()){
+			userInDB.setPassword(user.getPassword());
+			userInDB.setSentimentAnalysis(user.isSentimentAnalysis());
+			userService.saveNewUser(userInDB);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-			
+		}
+		else {
+			userInDB.setSentimentAnalysis(user.isSentimentAnalysis());
+			userService.saveEntry(userInDB);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
 	}
 	@DeleteMapping
 	public ResponseEntity<?> deleteUser(){
