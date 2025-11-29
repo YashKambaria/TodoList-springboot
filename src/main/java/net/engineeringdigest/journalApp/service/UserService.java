@@ -52,8 +52,8 @@ public class UserService {
 	}
 	
 	public void saveAdmin(User user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setRoles(Arrays.asList("User","ADMIN"));
-		userRepositary.save(user);
+		User byUserName = userRepositary.findByUserName(user.getUserName());
+		byUserName.setRoles(Arrays.asList("User","ADMIN"));
+		userRepositary.save(byUserName);
 	}
 }

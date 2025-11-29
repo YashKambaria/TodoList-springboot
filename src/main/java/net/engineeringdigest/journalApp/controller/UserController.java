@@ -31,11 +31,20 @@ public class UserController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userName = authentication.getName();
 		User userInDB=userService.findByUserName(userName);
-				userInDB.setUserName(user.getUserName());
-				userInDB.setPassword(user.getPassword());
-				userService.saveNewUser(userInDB);
+		if(user.getUserName()!=null && !user.getUserName().isEmpty()){
+			userInDB.setUserName(user.getUserName());
+		}
+		if(user.getPassword()!=null && !user.getPassword().isEmpty()){
+			userInDB.setPassword(user.getPassword());
+			userInDB.setSentimentAnalysis(user.isSentimentAnalysis());
+			userService.saveNewUser(userInDB);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-			
+		}
+		else {
+			userInDB.setSentimentAnalysis(user.isSentimentAnalysis());
+			userService.saveEntry(userInDB);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
 	}
 	@DeleteMapping
 	public ResponseEntity<?> deleteUser(){
@@ -47,6 +56,7 @@ public class UserController {
 	
 	@GetMapping
 	public ResponseEntity<?> greetings(@RequestBody String city){
+		city=city.substring(0,city.length()-1);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return new ResponseEntity<>("hi "+authentication.getName()+" Temperature is  "+weatherService.getWeather(city).getCurrent().getTemperature(),HttpStatus.OK);
 		

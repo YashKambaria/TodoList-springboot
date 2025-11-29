@@ -1,9 +1,11 @@
 package net.engineeringdigest.journalApp.config;
 
+import net.engineeringdigest.journalApp.filters.JwtFilter;
 import net.engineeringdigest.journalApp.service.UserDetailServerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -11,11 +13,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-public class  SpringSecurity extends WebSecurityConfigurerAdapter {
+public class SpringSecurity extends WebSecurityConfigurerAdapter {
 	
+	@Autowired
+	private JwtFilter jwtFilter;
 	
 	@Autowired
 	private UserDetailServerImpl userDetailsService;
@@ -25,13 +30,11 @@ public class  SpringSecurity extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers("/journal/**","/user/**").authenticated()
 				.antMatchers("/admin/**").hasAnyRole("ADMIN")
-				.anyRequest().permitAll()
-				.and()
-				.httpBasic();
-		
+				.anyRequest().permitAll();
 		http.sessionManagement().
 				sessionCreationPolicy(SessionCreationPolicy.STATELESS).
 				and().csrf().disable();
+		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -41,5 +44,11 @@ public class  SpringSecurity extends WebSecurityConfigurerAdapter {
 	@Bean
 	public PasswordEncoder passwordEncoder(){
 		return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception{
+		return super.authenticationManagerBean();
 	}
 }

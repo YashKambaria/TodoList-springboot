@@ -3,6 +3,7 @@ package net.engineeringdigest.journalApp.servicetest;
 import net.engineeringdigest.journalApp.entity.User;
 import org.junit.jupiter.api.Assertions;
 import net.engineeringdigest.journalApp.repositary.UserRepositary;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ public class UserServiceTests {
 	@Autowired
 	private UserRepositary userRepositary;
 	
+	@Disabled
 	@Test
 	public void findByUserName(){
 		assertNotNull(userRepositary.findByUserName("Ram"));

@@ -20,11 +20,23 @@ public class WeatherService {
 	
 	@Autowired
 	private AppCache appCache;
+	
+	@Autowired
+	private RedisService redisService;
+	
+	
 	public WeatherResponse getWeather(String city){
 		try {
-			String finalApi = appCache.APP_CACHE.get("weather_api").replace("<apikey>", apikey).replace("<city>", city);
-			ResponseEntity<WeatherResponse> data = restTemplate.exchange(finalApi, HttpMethod.GET, null, WeatherResponse.class);
-			return data.getBody();
+			WeatherResponse weatherResponse=redisService.get("weather_of_"+city,WeatherResponse.class);
+			if(weatherResponse!=null){
+				return weatherResponse;
+			}
+			else {
+				String finalApi = appCache.APP_CACHE.get("weather_api").replace("<apikey>", apikey).replace("<city>", city);
+				ResponseEntity<WeatherResponse> data = restTemplate.exchange(finalApi, HttpMethod.GET, null, WeatherResponse.class);
+				redisService.set("weather_of_"+city,data.getBody(),300l);
+				return data.getBody();
+			}
 		} catch (Exception e) {
 			// Log and handle the exception
 			System.err.println("Error fetching weather data: " + e.getMessage());

@@ -99,8 +99,13 @@ public class JournalEntryControllerV2 {
 		if(!collect.isEmpty()) {
 			JournalEntity old = journalEntryService.getById(id).orElse(null);
 			if (old != null) {
-				old.setTitle(newEntry.getTitle() != null && !newEntry.getTitle().equals("") ? newEntry.getTitle() : old.getTitle());
-				old.setContent(newEntry.getContent() != null && !newEntry.getContent().equals("") ? newEntry.getContent() : old.getContent());
+				if (newEntry.getTitle() != null && !newEntry.getTitle().isEmpty()) {
+					old.setTitle(newEntry.getTitle());
+				}
+				if (newEntry.getContent() != null && !newEntry.getContent().isEmpty()) {
+					old.setContent(newEntry.getContent());
+				}
+				
 				journalEntryService.saveEntry(old);
 				return new ResponseEntity<>(old, HttpStatus.OK);
 			}
